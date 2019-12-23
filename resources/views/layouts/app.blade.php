@@ -31,16 +31,21 @@ content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=
 
 
  @auth
-<ul class="navbar-nav ml-auto">
-<li class="nav-item dropdown">
-<a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-{{auth()->user()->name}} <span class="caret"></span>
-</a>
+ <ul class="navbar-nav ml-auto">
+ <li class="nav-item dropdown">
+ <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+ {{auth()->user()->name}} 
+ 
 
-<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
- <a class="dropdown-item" href="{{ route('logout') }}"
- onclick="event.preventDefault();
- document.getElementById('logout-form').submit();">
+ @if(auth()->user()->profile->avatar)
+ <img src="{{asset('storage/' . auth()->user()->profile->avatar)}}" alt="Foto de {{auth()->user()->name}}" class="rounded-circle" width="50">
+ @endif
+ 
+ <span class="caret"></span>
+ </a>
+
+ <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+ <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
  Sair
  </a>
 
@@ -48,11 +53,15 @@ content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=
  @csrf
  </form>
 
- 
+ <a class="dropdown-item" href="{{ route('profile.index') }}">
+ Profile
+ </a>
  </div>
  </li>
  </ul>
-@endauth
+ @endauth
+
+
  </nav>
  <div class="container">
  @include("flash::message")

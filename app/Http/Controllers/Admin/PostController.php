@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Post;
+use Illuminate\Support\Facades\Storage;
 
  class PostController extends Controller
  {
@@ -42,6 +43,13 @@ use App\Post;
                 $user = auth()->user();
                 $post = $user->posts()->create($data);
                 $post->categories()->sync($data['categories']);
+
+                if($request->hasFile('thumb')) {
+                        $data['thumb'] = $request->file('thumb')->store('thumbs', 'public');
+                } else {
+                        unset($data['thumb']);
+                }
+
                 
                 flash('Postagem inserida com sucesso!')->success();
                 return redirect()->route('posts.index');
@@ -72,6 +80,16 @@ use App\Post;
           try{
                 $post->update($data);
                 $post->categories()->sync($data['categories']);
+
+                if($request->hasFile('thumb')) {
+                        //Remove a imagem atual
+                        Storage::disk('public')->delete($post->thumb);
+                        
+                        $data['thumb'] = $request->file('thumb')->store('thumbs', 'public');
+                 } else {
+                         unset($data['thumb']);
+                 }
+
                 
                 flash('Postagem atualizada com sucesso!')->success();
                 return redirect()->route('posts.index');

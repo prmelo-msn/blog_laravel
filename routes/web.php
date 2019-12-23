@@ -9,7 +9,7 @@
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+ */
 
 Route::get('/', function () {
     return view('welcome');
@@ -17,20 +17,20 @@ Route::get('/', function () {
 
 Route::get('hello-world', 'HelloWorldController@index');
 
-Route::get('/post/{slug}', function($slug) {
+Route::get('/post/{slug}', function ($slug) {
     return $slug;
 })
-->name('post.single');
+    ->name('post.single');
 
-Route::get('/user/{id}', function($slug) {
+Route::get('/user/{id}', function ($slug) {
     return $slug;
 })
-->where(['id' => '[0-9]+']);
+    ->where(['id' => '[0-9]+']);
 
 Route::resource('/users', 'UserController');
 
 // Route::prefix('admin')->namespace('Admin')->group(function(){
-    
+
 // Route::prefix('posts')->name('posts.')->group(function(){
 
 // Route::get('/create', 'PostController@create')->name('create');
@@ -38,15 +38,22 @@ Route::resource('/users', 'UserController');
 // Route::post('/store', 'PostController@store')->name('store');
 
 //     });
-    
-// });
-Route::group(['middleware' => ['auth']], function(){
 
-    Route::prefix('admin')->namespace('Admin')->group(function(){
-        
+// });
+Route::group(['middleware' => ['auth']], function () {
+
+    Route::prefix('admin')->namespace('Admin')->group(function () {
+
         Route::resource('posts', 'PostController');
         Route::resource('categories', 'CategoryController');
-        
+
+        Route::prefix('profile')->name('profile.')->group(function () {
+
+            Route::get('/', 'ProfileController@index')->name('index');
+            Route::post('/', 'ProfileController@update')->name('update');
+
+        });
+
     });
 
 });
@@ -54,5 +61,3 @@ Route::group(['middleware' => ['auth']], function(){
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-
-
